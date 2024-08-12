@@ -1502,8 +1502,11 @@ impl<'g> ExternalSource<'g> {
         // We *could* pull in a URL parsing library, but Cargo's sources are so limited that it
         // seems like a waste to.
         if let Some(registry) = source.strip_prefix(Self::REGISTRY_PLUS) {
-            // A registry source.
+            // A git registry source.
             Some(ExternalSource::Registry(registry))
+        } else if source.starts_with("sparse+") {
+            // A sparse registry source.
+            Some(ExternalSource::Registry(source))
         } else if let Some(rest) = source.strip_prefix(Self::GIT_PLUS) {
             // A Git source.
             // Look for a trailing #, which indicates the resolved revision.
